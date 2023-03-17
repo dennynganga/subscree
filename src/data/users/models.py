@@ -14,8 +14,8 @@ class UserCreate(UserBase):
 
 
 class User(UserBase):
-    id: int
-    deleted_at: datetime.datetime = None
+    id: str
+    disabled_at: datetime.datetime | None = None
 
     class Config:
         orm_mode = True

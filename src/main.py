@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from src.api import accounts, users
+from src.api import accounts, users, products, customers
 from src.data.base import Base, engine
 from src.middleware import validate_domain
 
@@ -13,6 +13,8 @@ app.add_middleware(BaseHTTPMiddleware, dispatch=validate_domain)
 
 app.include_router(users.router)
 app.include_router(accounts.router)
+app.include_router(customers.router)
+app.include_router(products.router)
 
 
 @app.get("/")

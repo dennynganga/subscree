@@ -21,7 +21,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # TODO - store in redis
 USERS = {
     "dennis@byteslab.io": {
-        "id": 1, "name": "Dennis", "email": "dennis@byteslab.io", "deleted_at": None
+        "id": "Evt3NcrcjPRU29b8rtn9wx", "name": "Dennis", "email": "dennis@byteslab.io", "deleted_at": None
     }
 }
 

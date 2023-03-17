@@ -3,9 +3,9 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-DB_URL = "postgresql://subscree:subscree@127.0.0.1:5432/subscree"
+from src.settings import settings
 
-engine = create_engine(DB_URL)
+engine = create_engine(settings.database_url)
 
 Base = declarative_base()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

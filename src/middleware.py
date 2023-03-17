@@ -9,15 +9,21 @@ DOMAIN = "subscree.io"
 
 # TODO - use redis to store mapping
 TENANT_DOMAIN_USER_MAPPING = {
-    "byteslab": {"id": 1, "users": {1, 2, 3, 4}},
+    "byteslab": {"id": "a3Kk4DcmFhEnwjatCiorKJ", "users": {"Evt3NcrcjPRU29b8rtn9wx"}},
     "percolate": {"id": 2, "users": {5, 6, 7}}
 }
 
-EXEMPTED_PATHS = ["/token"]
+AUTH_EXEMPTED_PATHS = ["/token"]
+
+PATHS_WITHOUT_TENANT = {"/accounts/": ["post"]}
 
 
 async def validate_domain(request: Request, call_next):
-    request.state.tenant_id = None
+    request.state.account_id = None
+
+    path = request.url.path
+    if path in PATHS_WITHOUT_TENANT and request.method.lower() in PATHS_WITHOUT_TENANT[path]:
+        return await call_next(request)
 
     host = request.headers["host"]
     split_host = host.split(".", 1)
@@ -26,11 +32,11 @@ async def validate_domain(request: Request, call_next):
     if not domain == DOMAIN:
         return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"detail": "Not found."})
 
-    tenant = TENANT_DOMAIN_USER_MAPPING.get(subdomain)
-    if not tenant:
+    account = TENANT_DOMAIN_USER_MAPPING.get(subdomain)
+    if not account:
         return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"detail": "Invalid org."})
 
-    if request.url.path in EXEMPTED_PATHS:
+    if path in AUTH_EXEMPTED_PATHS:
         return await call_next(request)
 
     token = request.headers.get("Authorization")
@@ -42,10 +48,10 @@ async def validate_domain(request: Request, call_next):
     except HTTPException:
         return JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content={"detail": "Unauthorised."})
 
-    if current_user.id not in tenant["users"]:
-        return JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content={"detail": "Unauthorized org."})
+    if current_user.id not in account["users"]:
+        return JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED, content={"detail": "Unauthorized account."})
 
-    request.state.tenant_id = tenant["id"]
+    request.state.account_id = account["id"]
 
     response = await call_next(request)
 
