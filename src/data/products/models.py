@@ -7,10 +7,10 @@ from src.data.products.db import ProductBillingType
 
 class ProductBase(BaseModel):
     name: str
-    billing_type: ProductBillingType
+    product_billing_types: list[ProductBillingType]
     trial_days: int
     cycle_days: int
-    bulk_discount: dict
+    bulk_discount: dict | None = None
 
 
 class ProductCreate(ProductBase):

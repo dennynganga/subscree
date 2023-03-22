@@ -7,6 +7,8 @@ from src.data.products.models import ProductCreate, PlanCreate
 def add_product(product: ProductCreate, account_id: str, session: Session):
     product_dict = product.dict()
     product_dict.update({"account_id": account_id})
+    product_dict.pop("product_billing_types")
+    print(product_dict)
     new_product = ProductDAO(**product.dict())
     session.add(new_product)
     session.flush()
@@ -14,7 +16,7 @@ def add_product(product: ProductCreate, account_id: str, session: Session):
     return new_product
 
 
-def retrieve_products(account_id: str, session: Session):
+def retrieve_products(account_id: str, session: Session) :
     products = (
         session.query(ProductDAO).filter(ProductDAO.account_id == account_id).all()
     )

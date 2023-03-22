@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from starlette import status
 from starlette.requests import Request
 
-from src.api.utils import object_belongs_to_account
 from src.data.base import session_scope
 from src.data.products import models as product_models, crud as products_crud
 

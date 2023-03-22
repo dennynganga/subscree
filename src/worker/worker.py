@@ -11,6 +11,13 @@ def setup_periodic_tasks(sender, **kwargs):
 
 
 @celery_app.task
+def check_almost_due_bills():
+    """
+    Checks for almost due bills to send invoice reminders
+    """
+
+
+@celery_app.task
 def check_due_bills():
     """
     Checks for bills that are due today
